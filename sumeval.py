@@ -18,7 +18,7 @@ def sumtotup(summary):
 		sumtup = sumtup + (str(line),)
 	return sumtup
 
-def evaluate(summary, sumref):
+def evaluate(summary, sumref, debug=False):
 	sumstring = sumtostr(summary)
 	sumtuple = sumtotup(summary)
 	refstring = sumtostr(sumref)
@@ -26,8 +26,9 @@ def evaluate(summary, sumref):
 	summodel = TfDocumentModel(sumstring, Tokenizer("english"))
 	refmodel = TfDocumentModel(refstring, Tokenizer("english"))
 
-#	print(reftuple)
-#	print(sumtuple)
+	if debug:
+		print(reftuple)
+		print(sumtuple)
 
 	cos_val = cosine_similarity(summodel, refmodel)
 	unit_val = unit_overlap(summodel, refmodel)
