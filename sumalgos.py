@@ -4,46 +4,56 @@ from sumy.summarizers.luhn import LuhnSummarizer
 from sumy.summarizers.text_rank import TextRankSummarizer
 from sumy.summarizers.kl import KLSummarizer
 from sumy.parsers.plaintext import PlaintextParser
+from sumy.nlp.stemmers import Stemmer
+from sumy.utils import get_stop_words
 from sumeval import *
 
 def summarize(doc, summarizer):
-	summary = summarizer(doc.document, '10%')
+	summary = summarizer(doc.document, '20%')
 	return summary
 
-def lsa(doc, refsum):
-	summarizer = LsaSummarizer()
+def lsa(doc, refsum, debug = False):
+	stemmer = Stemmer("english")
+	summarizer = LsaSummarizer(stemmer)
+	summarizer.stop_words = get_stop_words("english")
 	summary = summarize(doc, summarizer)
-	return evaluate(summary, refsum)
+	return evaluate(summary, refsum, debug=True)
 
 def lexrank(doc, refsum):
-	summarizer = LexRankSummarizer()
+	stemmer = Stemmer("english")
+	summarizer = LexRankSummarizer(stemmer)
+	summarizer.stop_words = get_stop_words("english")
 	summary = summarize(doc, summarizer)
 	return evaluate(summary, refsum)
 
 def textrank(doc, refsum):
-	summarizer = TextRankSummarizer()
+	stemmer = Stemmer("english")
+	summarizer = TextRankSummarizer(stemmer)
+	summarizer.stop_words = get_stop_words("english")
 	summary = summarize(doc, summarizer)
 	return evaluate(summary, refsum)
 
 def luhn(doc, refsum):
-	summarizer = LuhnSummarizer()
+	stemmer = Stemmer("english")
+	summarizer = LuhnSummarizer(stemmer)
+	summarizer.stop_words = get_stop_words("english")
 	summary = summarize(doc, summarizer)
 	return evaluate(summary, refsum)
 
 def klsum(doc, refsum):
-	summarizer = KLSummarizer()
+	stemmer = Stemmer("english")
+	summarizer = KLSummarizer(stemmer)
+	summarizer.stop_words = get_stop_words("english")
 	summary = summarize(doc, summarizer)
 	return evaluate(summary, refsum)
 
 if __name__ == '__main__':
 	
-	file = "doc1.txt"
+	file = "ent5.txt"
 	parser = PlaintextParser.from_file(file, Tokenizer("english"))
 
-	rfile = "doc1sum.txt"
+	rfile = "ent5sum.txt"
 	refparser = PlaintextParser.from_file(rfile, Tokenizer("english"))
 	refparser = refparser.document.sentences
 
-	print(lsa(parser,refparser))
-
-	
+	print(lsa(parser,refparser,True))
